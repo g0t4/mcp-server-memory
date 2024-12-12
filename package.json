@@ -10,7 +10,8 @@
     "prepare": "npm run build",
     "watch": "npm run build && tsc --watch",
     "start": "node --no-warnings=ExperimentalWarning dist/index.js",
-    "dev": "tsc -w"
+    "dev": "tsc -w",
+    "inspector": "npx @modelcontextprotocol/inspector dist/index.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.4.0",
