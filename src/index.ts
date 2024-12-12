@@ -58,7 +58,8 @@ const createServer = async () => {
             tools: [
                 {
                     name: "append_memories",
-                    description: "Add new memory lines, new line separated"
+                    description:
+                        "Add new memory line(s), use newline to separate",
                     inputSchema: {
                         type: "object",
                         properties: {
