@@ -107,4 +107,7 @@ const createServer = async () => {
     await server.connect(transport);
 };
 
-createServer().catch(console.error);
+createServer().catch((error) => {
+    console.error("Server error:", error);
+    process.exit(1);
+});
