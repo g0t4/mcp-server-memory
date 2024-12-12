@@ -11,12 +11,14 @@ These tools allow Claude (and other MCP clients) to manage memories mid-chat:
 - `memory_list()` - return all memories
 - FYI `memory_update` == `memory_delete` + `memory_add`
 
-For example
+For example,
 - I mention my name => "talking to Wes" 
 - metion daughter's age => "Wes's daughter is 8" 
 - say working on a typescript project => "working on typescript project"
 - AND, this is critical, can be based on things Claude (assistant/LLM) says or does... 
     - Notably, tool use (i.e. `run_command`)... say there is a failure on a first attempt to use the tool (i.e. the `python` command isn't present) and then a subsequent tool use succeeds (i.e. using `python3` instead of `python`) => Claude can record "use python3, python is not present"...
+- I ask Claude to get rid of memories about X => memory_delete(query: X)
+- I correct my name => memory_search("oldname") + memory_delete(each matching record, or a common subset query) + memory_add("newname")
 
 Then, when a new chat begins, Claude will automatically get recent memories (a subset or all) **OR** can ask for memories (some/more/all). And then can use those to influence responses/tools/etc.
 
