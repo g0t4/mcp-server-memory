@@ -173,7 +173,7 @@ const createServer = async () => {
     async function addMemory(
         args: Record<string, unknown> | undefined
     ): Promise<CallToolResult> {
-        const text = args?.text;
+        const text = args?.text as string;
         if (!text) {
             return {
                 isError: true,
@@ -187,7 +187,7 @@ const createServer = async () => {
         }
 
         try {
-            await appendMemory(memory);
+            await appendMemory(text);
             return {
                 isError: false,
                 content: [],
