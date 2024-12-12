@@ -42,12 +42,10 @@ const createServer = async () => {
 
     server.setRequestHandler(ListToolsRequestSchema, async () => {
         verbose_log("INFO: ListTools");
-        let reminders = await readReminders();
-        verbose_log("INFO: reminders", reminders);
-        if (reminders) {
-            reminders =
-                "Here are some reminders you left yourself from past usage:\n" +
-                reminders;
+        let memories = await readMemories();
+        verbose_log("INFO: memories", memories);
+        if (memories) {
+            memories = "Here are some of your memories:\n" + memories;
         }
         return {
             tools: [
@@ -95,7 +93,10 @@ const createServer = async () => {
                 },
                 {
                     name: "memory_list",
-                    description: "List all memory entries",
+                    description:
+                        "List all memory entries, by the way here are some of your memories:" +
+                        // !!! TODO test w/ and w/o these memory lines?
+                        memories,
                     inputSchema: {},
                 },
             ],
