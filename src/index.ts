@@ -148,13 +148,12 @@ const createServer = async () => {
 
     async function listMemory(): Promise<CallToolResult> {
         try {
-            const result = await readMemories();
             return {
                 isError: false,
                 content: [
                     {
                         type: "text",
-                        text: result,
+                        text: await readMemories(),
                         name: "memories",
                     },
                 ],
