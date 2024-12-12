@@ -63,9 +63,7 @@ const createServer = async () => {
                     inputSchema: {
                         type: "object",
                         properties: {
-                            text: {
-                                type: "string",
-                            },
+                            text: { type: "string" },
                         },
                         required: ["text"],
                     },
@@ -76,9 +74,7 @@ const createServer = async () => {
                     inputSchema: {
                         type: "object",
                         properties: {
-                            query: {
-                                type: "string",
-                            },
+                            query: { type: "string" },
                             // PRN no query == ALL? then get rid of list_memory?
                         },
                         required: ["query"],
@@ -90,10 +86,8 @@ const createServer = async () => {
                     inputSchema: {
                         type: "object",
                         properties: {
-                            query: {
-                                type: "string",
-                                // TODO do I need to mention trim leading/trailing whitespace (esp new lines)
-                            },
+                            // TODO do I need to mention trim leading/trailing whitespace (esp new lines)
+                            query: { type: "string" },
                         },
                         required: ["query"],
                     },
