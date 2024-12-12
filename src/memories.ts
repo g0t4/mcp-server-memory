@@ -52,9 +52,7 @@ export async function listMemory(): Promise<CallToolResult> {
             isError: false,
             content: [
                 {
-                    type: "text",
-                    // !!! TODO CAN I RETURN an ARRAY intead of string?
-                    // !!!! TODO IF so add array split in readMemories (and remove empty lines too)
+                    type: "text", // IIUC only text or image, so leave new line delimited
                     text: await readMemories(),
                     name: "memories",
                 },

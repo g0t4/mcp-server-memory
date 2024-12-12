@@ -94,6 +94,7 @@ const createServer = async () => {
                 },
                 {
                     name: "list_memory",
+                    description: "newline delimited list of all memory entries",
                     //description:
                     //    "List all memory entries, by the way here are some of your memories:" +
                     // !!! TODO test w/ and w/o these memory lines?
