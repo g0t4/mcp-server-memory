@@ -34,7 +34,7 @@ const createServer = async () => {
             capabilities: {
                 //resources: {},
                 tools: {},
-                prompts: {},
+                //prompts: {},
                 //logging: {}, // for logging messages that don't seem to work yet or I am doing them wrong
             },
         }
