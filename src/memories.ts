@@ -23,12 +23,7 @@ export async function readMemories(): Promise<string> {
         return "";
     }
 
-    try {
-        return (await fs.readFile(memories_file_path, "utf8")) ?? "";
-    } catch (error) {
-        always_log("WARN: reading memories file failed", error);
-        return "";
-    }
+    return (await fs.readFile(memories_file_path, "utf8")) ?? "";
 }
 
 export async function appendMemory(memory: string): Promise<CallToolResult> {
