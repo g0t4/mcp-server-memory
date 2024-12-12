@@ -151,12 +151,13 @@ const createServer = async () => {
             const result = await readMemories();
             return {
                 isError: false,
-                content: [],
-                //content: [ {
-                //    type: "text",
-                //    text: result
-                //    name: "memories",
-                //} ] as TextContent[],
+                content: [
+                    {
+                        type: "text",
+                        text: result,
+                        name: "memories",
+                    },
+                ],
             };
         } catch (error) {
             //// TODO catch for other errors, not just ExecException
