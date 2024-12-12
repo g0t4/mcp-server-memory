@@ -25,18 +25,13 @@ const createServer = async () => {
     } = require("../package.json");
 
     const server = new Server(
-        // PRN inline the destructuring of package.json here should work fine
         {
             name: package_name,
             version: package_version,
-            //description: "Run commands on this " + os.platform() + " machine",
         },
         {
             capabilities: {
-                //resources: {},
                 tools: {},
-                //prompts: {},
-                //logging: {}, // for logging messages that don't seem to work yet or I am doing them wrong
             },
         }
     );
@@ -118,27 +113,21 @@ const createServer = async () => {
                     return { toolResult: await appendMemory(text) };
                 }
                 case "list_memory": {
-                    return {
-                        toolResult: await listMemory(),
-                    };
+                    return { toolResult: await listMemory() };
                 }
                 case "search_memory": {
                     const query = request.params.arguments?.query as string;
                     if (!query) {
                         throw new Error("query is required");
                     }
-                    return {
-                        toolResult: await searchMemory(query),
-                    };
+                    return { toolResult: await searchMemory(query) };
                 }
                 case "delete_memory": {
                     const query = request.params.arguments?.query as string;
                     if (!query) {
                         throw new Error("query is required");
                     }
-                    return {
-                        toolResult: await deleteMemory(query),
-                    };
+                    return { toolResult: await deleteMemory(query) };
                 }
                 default:
                     throw new Error("Unknown tool");
