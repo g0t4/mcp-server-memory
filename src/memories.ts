@@ -35,6 +35,7 @@ export async function appendMemory(memory: string): Promise<void> {
         // FYI append will create or append
         await fs.appendFile(memories_file_path, memory);
     } catch (error) {
+        // TODO lock file and try to write (macOS)
         always_log("WARN: appending memory failed", error);
     }
 }
