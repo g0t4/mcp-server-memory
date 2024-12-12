@@ -1,15 +1,20 @@
 {
   "name": "mcp-server-memory",
   "version": "1.0.0",
+  "description": "An MCP server for managing memories in a text file",
+  "private": false,
   "type": "module",
   "scripts": {
-    "start": "node --no-warnings=ExperimentalWarning dist/index.js",
+    "clean": "rm -rf dist",
     "build": "tsc",
+    "prepare": "npm run build",
+    "watch": "npm run build && tsc --watch",
+    "start": "node --no-warnings=ExperimentalWarning dist/index.js",
     "dev": "tsc -w"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.4.0",
-    "zod": "^3.24.1"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
