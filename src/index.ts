@@ -3,6 +3,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { readFile, writeFile, appendFile } from "fs/promises";
 import { existsSync } from "fs";
 import { z } from "zod";
+import { createRequire } from "module";
 
 const MEMORY_FILE = "memory.txt";
 
@@ -23,7 +24,14 @@ const createServer = async () => {
         await writeFile(MEMORY_FILE, "", "utf-8");
     }
 
+    const require = createRequire(import.meta.url);
+    const {
+        name: package_name,
+        version: package_version,
+    } = require("../package.json");
+
     const server = new Server(
+        // PRN inline the destructuring of package.json here should work fine
         {
             name: package_name,
             version: package_version,
@@ -112,4 +120,3 @@ const createServer = async () => {
 };
 
 createServer().catch(console.error);
-
