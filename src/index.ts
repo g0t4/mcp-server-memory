@@ -15,6 +15,7 @@ import {
     appendMemory,
     deleteMemory,
     searchMemory,
+    readMemories,
 } from "./memories.js";
 
 const createServer = async () => {
@@ -38,11 +39,11 @@ const createServer = async () => {
 
     server.setRequestHandler(ListToolsRequestSchema, async () => {
         verbose_log("INFO: ListTools");
-        //let memories = await readMemories();
-        //verbose_log("INFO: memories", memories);
-        //if (memories) {
-        //    memories = "Here are some of your memories:\n" + memories;
-        //}
+        let memories = await readMemories();
+        verbose_log("INFO: memories", memories);
+        if (memories) {
+            memories = "Here are your memories:\n" + memories;
+        }
         return {
             tools: [
                 {
@@ -83,11 +84,9 @@ const createServer = async () => {
                 },
                 {
                     name: "list_memory",
-                    description: "newline delimited list of all memory entries",
-                    //description:
-                    //    "List all memory entries, by the way here are some of your memories:" +
-                    // !!! TODO test w/ and w/o these memory lines?
-                    //    memories,
+                    description:
+                        "newline delimited list of all memory entries, " +
+                        memories,
                     inputSchema: {
                         type: "object",
                     },

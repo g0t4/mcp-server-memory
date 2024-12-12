@@ -12,7 +12,7 @@ const __dirname = dirname(__filename);
 let memories_file_path = __dirname + "/memories.txt";
 verbose_log("INFO: memories file path", memories_file_path);
 
-async function readMemories(): Promise<string> {
+export async function readMemories(): Promise<string> {
     // if the file doesn't exist, treat that as NO memories
     const file_exists = await fs
         .access(memories_file_path, fs.constants.F_OK)
