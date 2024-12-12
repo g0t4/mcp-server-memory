@@ -23,9 +23,23 @@ const createServer = async () => {
         await writeFile(MEMORY_FILE, "", "utf-8");
     }
 
-    const server = new Server({
-        name: "mcp-server-memory",
-        version: "1.0.0",
+    const server = new Server(
+        {
+            name: package_name,
+            version: package_version,
+            //description: "Run commands on this " + os.platform() + " machine",
+        },
+        {
+            capabilities: {
+                //resources: {},
+                tools: {},
+                prompts: {},
+                //logging: {}, // for logging messages that don't seem to work yet or I am doing them wrong
+            },
+        }
+    );
+
+    const foo = {
         tools: [
             {
                 name: "memory_add",
@@ -91,7 +105,7 @@ const createServer = async () => {
                 },
             },
         ],
-    });
+    };
 
     const transport = new StdioServerTransport();
     await server.connect(transport);
