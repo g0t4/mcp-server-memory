@@ -47,7 +47,9 @@ export async function listMemory(): Promise<CallToolResult> {
             isError: false,
             content: [
                 {
-                    type: "text", // IIUC only text or image, so leave new line delimited
+                    // FYI spec for tool results: https://spec.modelcontextprotocol.io/specification/server/tools/#tool-result
+                    // clearly is only text, image or resource
+                    type: "text",
                     text: await readMemories(),
                     name: "memories",
                 },
