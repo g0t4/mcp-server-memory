@@ -33,9 +33,9 @@ export async function readMemories(): Promise<string> {
 
 export async function appendMemory(memory: string): Promise<CallToolResult> {
     try {
+        memory = memory.trim(); // trim trailing/leading whitespace (notably newlines)
         // TODO great case for a test case :)
-        // FYI append will create or append
-        await fs.appendFile(memories_file_path, "\n" + memory);
+        await fs.appendFile(memories_file_path, "\n" + memory); // FYI append will create or append
         return {
             isError: false,
             content: [],
@@ -53,6 +53,8 @@ export async function listMemory(): Promise<CallToolResult> {
             content: [
                 {
                     type: "text",
+                    // !!! TODO CAN I RETURN an ARRAY intead of string?
+                    // !!!! TODO IF so add array split in readMemories (and remove empty lines too)
                     text: await readMemories(),
                     name: "memories",
                 },
@@ -81,6 +83,7 @@ function errorResult(what: string, error: any) {
 }
 
 export async function deleteMemory(query: string): Promise<CallToolResult> {
+    query = query.trim(); // trim trailing/leading whitespace (notably newlines)
     const memories = await readMemories();
     const lines = memories.split("\n");
     // TODO config formatter to knock it off adding () around single param lamdas
@@ -97,6 +100,7 @@ export async function deleteMemory(query: string): Promise<CallToolResult> {
 }
 
 export async function searchMemory(query: string): Promise<CallToolResult> {
+    query = query.trim(); // trim trailing/leading whitespace (notably newlines)
     // TODO pass readMemories failure back as error too (in all uses of it, move into try{} block
     const memories = await readMemories();
     const lines = memories.split("\n");

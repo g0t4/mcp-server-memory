@@ -57,8 +57,8 @@ const createServer = async () => {
         return {
             tools: [
                 {
-                    name: "add_memory",
-                    description: "Add a new memory entry",
+                    name: "append_memories",
+                    description: "Add new memory lines, new line separated"
                     inputSchema: {
                         type: "object",
                         properties: {
@@ -91,6 +91,7 @@ const createServer = async () => {
                         properties: {
                             query: {
                                 type: "string",
+                                // TODO do I need to mention trim leading/trailing whitespace (esp new lines)
                             },
                         },
                         required: ["query"],
@@ -119,7 +120,7 @@ const createServer = async () => {
         async (request): Promise<{ toolResult: CallToolResult }> => {
             verbose_log("INFO: ToolRequest", request);
             switch (request.params.name) {
-                case "add_memory": {
+                case "append_memories": {
                     return {
                         toolResult: await addMemory(request.params.arguments),
                     };
