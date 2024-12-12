@@ -1,24 +1,25 @@
 {
-  "name": "mcp-server-memory",
-  "version": "1.0.0",
-  "description": "An MCP server for managing memories in a text file",
-  "private": false,
-  "type": "module",
-  "scripts": {
-    "clean": "rm -rf dist",
-    "build": "tsc",
-    "prepare": "npm run build",
-    "watch": "npm run build && tsc --watch",
-    "start": "node --no-warnings=ExperimentalWarning dist/index.js",
-    "dev": "tsc -w",
-    "inspector": "npx @modelcontextprotocol/inspector dist/index.js"
-  },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.3",
-    "zod": "^3.22.4"
-  },
-  "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.0.0"
-  }
+    "name": "mcp-server-memory",
+    "version": "1.0.0",
+    "description": "An MCP server for managing memories in a text file",
+    "private": false,
+    "type": "module",
+    "scripts": {
+        "clean": "rm -rf dist",
+        "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+        "prepare": "npm run build",
+        "watch": "npm run build && tsc --watch",
+        "inspector": "npx @modelcontextprotocol/inspector dist/index.js",
+
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:integration": "jest tests/integration"
+    },
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.0.3"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "typescript": "^5.0.0"
+    }
 }
