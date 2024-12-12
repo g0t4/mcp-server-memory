@@ -106,10 +106,63 @@ const createServer = async () => {
                 // IDEAS:
                 // - memory_extract_keywords/memory_word_cloud (pull from memories, like a word cloud, to help devise a search, esp if memory grows large - can even include frequency if useful, as a more salient memory!?)
                 //    speaking of salience, what all could correlate to generate salience (i.e. emotional state in humans imbues salience, i.e. car crash you can remember minute details about a car that 20 years later you can't recall in general but for the accident)
-                // - memory_touch 
+                // - memory_touch
             ],
         };
     });
+
+    server.setRequestHandler(
+        CallToolRequestSchema,
+        async (request): Promise<{ toolResult: CallToolResult }> => {
+            verbose_log("INFO: ToolRequest", request);
+            switch (request.params.name) {
+                case "run_command": {
+                    return {
+                        toolResult: await runCommand(request.params.arguments),
+                    };
+                }
+                case "run_script": {
+                    return {
+                        toolResult: await runScript(request.params.arguments),
+                    };
+                }
+                default:
+                    throw new Error("Unknown tool");
+            }
+        }
+    );
+
+    async function runCommand(
+        args: Record<string, unknown> | undefined
+    ): Promise<CallToolResult> {
+        const command = String(args?.command);
+        if (!command) {
+            throw new Error("Command is required");
+        }
+
+        const options: ExecOptions = {};
+        if (args?.cwd) {
+            options.cwd = String(args.cwd);
+            // ENOENT is thrown if the cwd doesn't exist, and I think LLMs can understand that?
+        }
+
+        try {
+            const result = await execAsync(command, options);
+            return {
+                isError: false,
+                content: messagesFor(result),
+            };
+        } catch (error) {
+            // TODO catch for other errors, not just ExecException
+            // FYI failure may not always be a bad thing if for example checking for a file to exist so just keep that in mind in terms of logging?
+            const response = {
+                isError: true,
+                content: messagesFor(error as ExecResult),
+            };
+            always_log("WARN: run_command failed", response);
+            return response;
+        }
+    }
 
     const transport = new StdioServerTransport();
     await server.connect(transport);
