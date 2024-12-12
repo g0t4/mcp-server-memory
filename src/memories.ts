@@ -41,21 +41,8 @@ export async function appendMemory(memory: string): Promise<CallToolResult> {
             content: [],
         };
     } catch (error) {
-        // TODO do I really want to return details here? or just log those?
-        const message = error instanceof Error ? error.message : String(error);
         // TODO test by locking file and try to write (macOS) - or use readonly dir
-        const response: CallToolResult = {
-            isError: true,
-            content: [
-                {
-                    type: "text",
-                    text: message,
-                    name: "error",
-                },
-            ],
-        };
-        always_log("WARN: failed", response);
-        return response;
+        return errorResult("appendMemory", error);
     }
 }
 
@@ -72,19 +59,23 @@ export async function listMemory(): Promise<CallToolResult> {
             ],
         };
     } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-
-        const response: CallToolResult = {
-            isError: true,
-            content: [
-                {
-                    type: "text",
-                    text: message,
-                    name: "error",
-                },
-            ],
-        };
-        always_log("WARN: run_command failed", response);
-        return response;
+        return errorResult("listMemory", error);
     }
+}
+
+function errorResult(what: string, error: any) {
+    // TODO do I really want to return details here? or just log those?
+    const message = error instanceof Error ? error.message : String(error);
+    const response: CallToolResult = {
+        isError: true,
+        content: [
+            {
+                type: "text",
+                text: message,
+                name: "error",
+            },
+        ],
+    };
+    always_log(`WARN: ${what} failed`, response);
+    return response;
 }
