@@ -116,9 +116,11 @@ const createServer = async () => {
             verbose_log("INFO: ToolRequest", request);
             switch (request.params.name) {
                 case "append_memories": {
-                    return {
-                        toolResult: await addMemory(request.params.arguments),
-                    };
+                    const text = request.params.arguments?.text as string;
+                    if (!text) {
+                        throw new Error("Memory's text is required");
+                    }
+                    return { toolResult: await appendMemory(text) };
                 }
                 case "list_memory": {
                     return {
@@ -148,16 +150,6 @@ const createServer = async () => {
             }
         }
     );
-
-    async function addMemory(
-        args: Record<string, unknown> | undefined
-    ): Promise<CallToolResult> {
-        const text = args?.text as string;
-        if (!text) {
-            throw new Error("Memory's text is required");
-        }
-        return appendMemory(text);
-    }
 
     const transport = new StdioServerTransport();
     await server.connect(transport);
