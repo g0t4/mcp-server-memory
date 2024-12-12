@@ -1,9 +1,11 @@
 name: test and publish
 
 on:
-    push:
-        branches: [master]
-        tags: ["v*"]
+    # # TODO re-enable these when ready:
+    # push:
+    #     branches: [master]
+    #     tags: ["v*"]
+    #
     # pull_request:
     #   branches: [ master ] # careful what access these builds get, i.e. to secrets (put sensitive stuff into environments for restricted access?)
     workflow_dispatch: # Add manual trigger
@@ -14,9 +16,7 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
-
-            - name: Use Node.js 20.x
-              uses: actions/setup-node@v4
+            - uses: actions/setup-node@v4
               with:
                   node-version: 22 
                   cache: "npm"
@@ -45,6 +45,7 @@ jobs:
                   node-version: 22
                   registry-url: "https://registry.npmjs.org"
             - run: npm ci
+            # yes I could consolidate into one job but releases are rare so keep separate so I can easily add more steps (i.e. probably set release notes in GH release too, not just tag as is now)
             - run: npm publish
               env:
                   NODE_AUTH_TOKEN: ${{secrets.npm_token}}
