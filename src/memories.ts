@@ -28,3 +28,21 @@ export async function readMemories(): Promise<string> {
         return "";
     }
 }
+
+export async function appendMemory(memory: string): Promise<void> {
+    try {
+        // TODO doesn't append create if not exists?
+        // TODO great case for a test case :)
+        const file_exists = await fs
+            .access(memories_file_path, fs.constants.F_OK)
+            .then(() => true) // if does exist, set to true
+            .catch(() => false); // error callback only invoked if does not exist
+        if (!file_exists) {
+            await fs.writeFile(memories_file_path, memory);
+        } else {
+            await fs.appendFile(memories_file_path, memory);
+        }
+    } catch (error) {
+        always_log("WARN: appending memory failed", error);
+    }
+}

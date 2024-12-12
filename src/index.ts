@@ -16,7 +16,7 @@ import { existsSync } from "fs";
 
 import { createRequire } from "module";
 import { always_log, verbose_log } from "./logs.js";
-import { readMemories } from "./memories.js";
+import { readMemories, appendMemory } from "./memories.js";
 
 const createServer = async () => {
     const require = createRequire(import.meta.url);
@@ -187,6 +187,7 @@ const createServer = async () => {
         }
 
         try {
+            await appendMemory(memory);
             return {
                 isError: false,
                 content: [],
