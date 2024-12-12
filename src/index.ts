@@ -103,6 +103,10 @@ const createServer = async () => {
                         type: "object",
                     },
                 },
+                // IDEAS:
+                // - memory_extract_keywords/memory_word_cloud (pull from memories, like a word cloud, to help devise a search, esp if memory grows large - can even include frequency if useful, as a more salient memory!?)
+                //    speaking of salience, what all could correlate to generate salience (i.e. emotional state in humans imbues salience, i.e. car crash you can remember minute details about a car that 20 years later you can't recall in general but for the accident)
+                // - memory_touch 
             ],
         };
     });
