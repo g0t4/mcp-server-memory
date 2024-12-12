@@ -52,21 +52,20 @@ const createServer = async () => {
         return {
             tools: [
                 {
-                    name: "memory_add",
+                    name: "add_memory",
                     description: "Add a new memory entry",
                     inputSchema: {
                         type: "object",
                         properties: {
-                            content: {
+                            text: {
                                 type: "string",
-                                description: "Content to add",
                             },
                         },
-                        required: ["content"],
+                        required: ["text"],
                     },
                 },
                 {
-                    name: "memory_search",
+                    name: "search_memory",
                     description: "Search memory entries",
                     inputSchema: {
                         type: "object",
@@ -79,7 +78,7 @@ const createServer = async () => {
                     },
                 },
                 {
-                    name: "memory_delete",
+                    name: "delete_memory",
                     description:
                         "Delete memory entries containing the search term",
                     inputSchema: {
@@ -94,19 +93,20 @@ const createServer = async () => {
                     },
                 },
                 {
-                    name: "memory_list",
+                    // !!! TODO should this be verb_noun? list_memory?
+                    name: "list_memory",
                     //description:
                     //    "List all memory entries, by the way here are some of your memories:" +
-                    //    // !!! TODO test w/ and w/o these memory lines?
+                    // !!! TODO test w/ and w/o these memory lines?
                     //    memories,
                     inputSchema: {
                         type: "object",
                     },
                 },
                 // IDEAS:
-                // - memory_extract_keywords/memory_word_cloud (pull from memories, like a word cloud, to help devise a search, esp if memory grows large - can even include frequency if useful, as a more salient memory!?)
+                // - extract_keywords/extract_word_cloud (pull from memories, like a word cloud, to help devise a search, esp if memory grows large - can even include frequency if useful, as a more salient memory!?)
                 //    speaking of salience, what all could correlate to generate salience (i.e. emotional state in humans imbues salience, i.e. car crash you can remember minute details about a car that 20 years later you can't recall in general but for the accident)
-                // - memory_touch
+                // - touch_memory
             ],
         };
     });
@@ -116,48 +116,87 @@ const createServer = async () => {
         async (request): Promise<{ toolResult: CallToolResult }> => {
             verbose_log("INFO: ToolRequest", request);
             switch (request.params.name) {
-                case "run_command": {
+                case "add_memory": {
                     return {
-                        toolResult: await runCommand(request.params.arguments),
+                        toolResult: await addMemory(request.params.arguments),
                     };
                 }
-                case "run_script": {
+                case "list_memory": {
                     return {
-                        toolResult: await runScript(request.params.arguments),
+                        toolResult: await listMemory(),
                     };
                 }
+                //case "search_memory": {
+                //    return {
+                //        toolResult: await searchMemory(
+                //            request.params.arguments
+                //        ),
+                //    };
+                //}
+                //case "delete_memory": {
+                //    return {
+                //        toolResult: await deleteMemory(
+                //            request.params.arguments
+                //        ),
+                //    };
+                //}
                 default:
                     throw new Error("Unknown tool");
             }
         }
     );
 
-    async function runCommand(
+    async function listMemory(): Promise<CallToolResult> {
+        try {
+            const result = await readMemories();
+            return {
+                isError: false,
+                content: [],
+                //content: [ {
+                //    type: "text",
+                //    text: result
+                //    name: "memories",
+                //} ] as TextContent[],
+            };
+        } catch (error) {
+            //// TODO catch for other errors, not just ExecException
+            //// FYI failure may not always be a bad thing if for example checking for a file to exist so just keep that in mind in terms of logging?
+            const response = {
+                isError: true,
+                content: [], // TODO error message
+            };
+            always_log("WARN: run_command failed", response);
+            return response;
+        }
+    }
+
+    async function addMemory(
         args: Record<string, unknown> | undefined
     ): Promise<CallToolResult> {
-        const command = String(args?.command);
-        if (!command) {
-            throw new Error("Command is required");
-        }
-
-        const options: ExecOptions = {};
-        if (args?.cwd) {
-            options.cwd = String(args.cwd);
-            // ENOENT is thrown if the cwd doesn't exist, and I think LLMs can understand that?
+        const text = args?.text;
+        if (!text) {
+            return {
+                isError: true,
+                content: [
+                    {
+                        type: "text",
+                        text: "Memory's text is required",
+                    },
+                ],
+            };
         }
 
         try {
-            const result = await execAsync(command, options);
             return {
                 isError: false,
-                content: messagesFor(result),
+                content: [],
             };
         } catch (error) {
-            // TODO catch for other errors, not just ExecException
-            // FYI failure may not always be a bad thing if for example checking for a file to exist so just keep that in mind in terms of logging?
+            //// TODO catch for other errors, not just ExecException
+            //// FYI failure may not always be a bad thing if for example checking for a file to exist so just keep that in mind in terms of logging?
             const response = {
                 isError: true,
-                content: messagesFor(error as ExecResult),
+                content: [], // TODO error message
             };
             always_log("WARN: run_command failed", response);
             return response;
