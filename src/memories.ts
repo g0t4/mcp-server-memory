@@ -35,7 +35,7 @@ export async function appendMemory(memory: string): Promise<CallToolResult> {
     try {
         // TODO great case for a test case :)
         // FYI append will create or append
-        await fs.appendFile(memories_file_path, memory);
+        await fs.appendFile(memories_file_path, "\n" + memory);
         return {
             isError: false,
             content: [],
@@ -78,4 +78,16 @@ function errorResult(what: string, error: any) {
     };
     always_log(`WARN: ${what} failed`, response);
     return response;
+}
+
+export async function deleteMemory(query: string) {
+    const memories = await readMemories();
+    const lines = memories.split("\n");
+    // TODO config formatter to knock it off adding () around single param lamdas
+    const keep_memories = lines.filter((l) => !l.includes(query));
+    try {
+        await fs.writeFile(memories_file_path, keep_memories.join("\n"));
+    } catch (error) {
+        return errorResult("deleteMemory", error);
+    }
 }
