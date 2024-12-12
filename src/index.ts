@@ -4,18 +4,12 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
     CallToolRequestSchema,
-    PromptMessage,
-    TextContent,
     ListToolsRequestSchema,
-    ListPromptsRequestSchema,
-    GetPromptRequestSchema,
     CallToolResult,
 } from "@modelcontextprotocol/sdk/types.js";
-import { readFile, writeFile, appendFile } from "fs/promises";
-import { existsSync } from "fs";
 
 import { createRequire } from "module";
-import { always_log, verbose_log } from "./logs.js";
+import { verbose_log } from "./logs.js";
 import {
     listMemory,
     appendMemory,
