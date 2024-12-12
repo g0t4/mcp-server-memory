@@ -1,5 +1,5 @@
 node_modules/
-dist/
+build/
 memory.txt
 # Created by https://www.toptal.com/developers/gitignore/api/node,windows,macos,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,windows,macos,linux

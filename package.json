@@ -5,11 +5,11 @@
     "private": false,
     "type": "module",
     "scripts": {
-        "clean": "rm -rf dist",
+        "clean": "rm -rf build",
         "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
         "prepare": "npm run build",
         "watch": "npm run build && tsc --watch",
-        "inspector": "npx @modelcontextprotocol/inspector dist/index.js",
+        "inspector": "npx @modelcontextprotocol/inspector build/index.js",
 
         "test": "jest",
         "test:watch": "jest --watch",
