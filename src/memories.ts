@@ -80,14 +80,35 @@ function errorResult(what: string, error: any) {
     return response;
 }
 
-export async function deleteMemory(query: string) {
+export async function deleteMemory(query: string): Promise<CallToolResult> {
     const memories = await readMemories();
     const lines = memories.split("\n");
     // TODO config formatter to knock it off adding () around single param lamdas
     const keep_memories = lines.filter((l) => !l.includes(query));
     try {
         await fs.writeFile(memories_file_path, keep_memories.join("\n"));
+        return {
+            isError: false,
+            content: [],
+        };
     } catch (error) {
         return errorResult("deleteMemory", error);
     }
+}
+
+export async function searchMemory(query: string): Promise<CallToolResult> {
+    // TODO pass readMemories failure back as error too (in all uses of it, move into try{} block
+    const memories = await readMemories();
+    const lines = memories.split("\n");
+    const keep_memories = lines.filter((l) => l.includes(query));
+    return {
+        isError: false,
+        content: [
+            {
+                type: "text",
+                text: keep_memories.join("\n"),
+                name: "memories",
+            },
+        ],
+    };
 }

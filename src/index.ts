@@ -16,7 +16,12 @@ import { existsSync } from "fs";
 
 import { createRequire } from "module";
 import { always_log, verbose_log } from "./logs.js";
-import { listMemory, appendMemory } from "./memories.js";
+import {
+    listMemory,
+    appendMemory,
+    deleteMemory,
+    searchMemory,
+} from "./memories.js";
 
 const createServer = async () => {
     const require = createRequire(import.meta.url);
@@ -66,34 +71,32 @@ const createServer = async () => {
                 },
                 {
                     name: "search_memory",
-                    description: "Search memory entries",
+                    description: "Return memory entries containing the query",
                     inputSchema: {
                         type: "object",
                         properties: {
                             query: {
                                 type: "string",
-                                description: "Search term",
                             },
+                            // PRN no query == ALL? then get rid of list_memory?
                         },
+                        required: ["query"],
                     },
                 },
                 {
                     name: "delete_memory",
-                    description:
-                        "Delete memory entries containing the search term",
+                    description: "Delete memory entries containing the query",
                     inputSchema: {
                         type: "object",
                         properties: {
-                            search_term: {
+                            query: {
                                 type: "string",
-                                description: "Search term to delete",
                             },
                         },
-                        required: ["search_term"],
+                        required: ["query"],
                     },
                 },
                 {
-                    // !!! TODO should this be verb_noun? list_memory?
                     name: "list_memory",
                     //description:
                     //    "List all memory entries, by the way here are some of your memories:" +
@@ -126,20 +129,24 @@ const createServer = async () => {
                         toolResult: await listMemory(),
                     };
                 }
-                //case "search_memory": {
-                //    return {
-                //        toolResult: await searchMemory(
-                //            request.params.arguments
-                //        ),
-                //    };
-                //}
-                //case "delete_memory": {
-                //    return {
-                //        toolResult: await deleteMemory(
-                //            request.params.arguments
-                //        ),
-                //    };
-                //}
+                case "search_memory": {
+                    const query = request.params.arguments?.query as string;
+                    if (!query) {
+                        throw new Error("query is required");
+                    }
+                    return {
+                        toolResult: await searchMemory(query),
+                    };
+                }
+                case "delete_memory": {
+                    const query = request.params.arguments?.query as string;
+                    if (!query) {
+                        throw new Error("query is required");
+                    }
+                    return {
+                        toolResult: await deleteMemory(query),
+                    };
+                }
                 default:
                     throw new Error("Unknown tool");
             }
