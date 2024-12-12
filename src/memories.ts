@@ -1,3 +1,5 @@
+import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+
 import { promises as fs } from "node:fs";
 import { always_log, verbose_log } from "./logs.js";
 
@@ -29,13 +31,60 @@ export async function readMemories(): Promise<string> {
     }
 }
 
-export async function appendMemory(memory: string): Promise<void> {
+export async function appendMemory(memory: string): Promise<CallToolResult> {
     try {
         // TODO great case for a test case :)
         // FYI append will create or append
         await fs.appendFile(memories_file_path, memory);
+        return {
+            isError: false,
+            content: [],
+        };
     } catch (error) {
-        // TODO lock file and try to write (macOS)
-        always_log("WARN: appending memory failed", error);
+        // TODO do I really want to return details here? or just log those?
+        const message = error instanceof Error ? error.message : String(error);
+        // TODO test by locking file and try to write (macOS) - or use readonly dir
+        const response: CallToolResult = {
+            isError: true,
+            content: [
+                {
+                    type: "text",
+                    text: message,
+                    name: "error",
+                },
+            ],
+        };
+        always_log("WARN: failed", response);
+        return response;
+    }
+}
+
+export async function listMemory(): Promise<CallToolResult> {
+    try {
+        return {
+            isError: false,
+            content: [
+                {
+                    type: "text",
+                    text: await readMemories(),
+                    name: "memories",
+                },
+            ],
+        };
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+
+        const response: CallToolResult = {
+            isError: true,
+            content: [
+                {
+                    type: "text",
+                    text: message,
+                    name: "error",
+                },
+            ],
+        };
+        always_log("WARN: run_command failed", response);
+        return response;
     }
 }

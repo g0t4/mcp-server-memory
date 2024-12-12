@@ -16,7 +16,7 @@ import { existsSync } from "fs";
 
 import { createRequire } from "module";
 import { always_log, verbose_log } from "./logs.js";
-import { readMemories, appendMemory } from "./memories.js";
+import { listMemory, appendMemory } from "./memories.js";
 
 const createServer = async () => {
     const require = createRequire(import.meta.url);
@@ -146,62 +146,14 @@ const createServer = async () => {
         }
     );
 
-    async function listMemory(): Promise<CallToolResult> {
-        try {
-            return {
-                isError: false,
-                content: [
-                    {
-                        type: "text",
-                        text: await readMemories(),
-                        name: "memories",
-                    },
-                ],
-            };
-        } catch (error) {
-            //// TODO catch for other errors, not just ExecException
-            //// FYI failure may not always be a bad thing if for example checking for a file to exist so just keep that in mind in terms of logging?
-            const response = {
-                isError: true,
-                content: [], // TODO error message
-            };
-            always_log("WARN: run_command failed", response);
-            return response;
-        }
-    }
-
     async function addMemory(
         args: Record<string, unknown> | undefined
     ): Promise<CallToolResult> {
         const text = args?.text as string;
         if (!text) {
-            return {
-                isError: true,
-                content: [
-                    {
-                        type: "text",
-                        text: "Memory's text is required",
-                    },
-                ],
-            };
+            throw new Error("Memory's text is required");
         }
-
-        try {
-            await appendMemory(text);
-            return {
-                isError: false,
-                content: [],
-            };
-        } catch (error) {
-            //// TODO catch for other errors, not just ExecException
-            //// FYI failure may not always be a bad thing if for example checking for a file to exist so just keep that in mind in terms of logging?
-            const response = {
-                isError: true,
-                content: [], // TODO error message
-            };
-            always_log("WARN: run_command failed", response);
-            return response;
-        }
+        return appendMemory(text);
     }
 
     const transport = new StdioServerTransport();
