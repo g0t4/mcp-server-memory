@@ -85,6 +85,7 @@ const createServer = async () => {
                 {
                     name: "list_memory",
                     description:
+                        // ! TODO I guess in reality, I might have a chat type called "with memory" in which case Claude Desktop app can inject the memories with smth like slash commands and Prompt requests (instead of ToolRequest) ... TBD... that way I can leave instructions too about when to add new memories, update, etc... ok yeah that makes sense
                         "newline delimited list of all memory entries, " +
                         memories,
                     inputSchema: {
