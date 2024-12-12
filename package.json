@@ -1,0 +1,18 @@
+{
+  "name": "mcp-server-memory",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node --no-warnings=ExperimentalWarning dist/index.js",
+    "build": "tsc",
+    "dev": "tsc -w"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.4.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
